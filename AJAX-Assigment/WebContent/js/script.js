@@ -1,7 +1,9 @@
+
+var uers=new Array(30); 
 $(document).ready(function(){
 	console.log("jQuery is loaded!");
 	
-	var uers=new Array(30); 
+	
 	 var i=0;
 		$("#showbtn").click(function() {  
 		
@@ -12,13 +14,11 @@ $(document).ready(function(){
 				success: function(data) {
 					 console.log("data successfully load");
 					 					 
-					 var table="<table border=2  style= width:550px; alignment-adjust: central;>" +
+					 var table="<table border=2  style= width:550px; alignment-adjust: central; background-color:pink>" +
 					 		"<tr>" +
 					 		"<th> </th>"+
 					 		"<th>LOGID</th>" +
 					 		"<th>Avatar</th>" +
-					 		/*"<th>Follwers</th>" +
-					 		"<th>public_Repos</th>" +*/
 					 		"</tr>";
 					
 					
@@ -26,12 +26,12 @@ $(document).ready(function(){
  
 					$.each(data, function(idx) {
 						uers[i]= data[idx].login;
-						console.log(uers[i]+" "+i);
+						//console.log(uers[i]+" "+i);
 						table+="<tr>" +
 						        "<td>" + idx +  "</td>" + 
 								"<td>" + data[idx].login +  "</td>" +
 								"<td>" + "<img src=" + data[idx].avatar_url + " height=100 width=100 />"  +  "</td>" +
-								/*"<td id=" + idx + ">" + ""  +"</td>" +*/
+								
 							
 								"</tr>"; 	
 						i++;
@@ -53,35 +53,39 @@ $(document).ready(function(){
 		
 		
 		$("#detail").click(function(){
-			/*var info="<table border=2  style= width:550px; alignment-adjust: central;>" +
+			var info="<table border=2  style= width:550px; alignment-adjust: central;background-color:pink>" +
 				 		"<tr>" +
-				 		"<th>Follwers</th>" +
-				 		"<th>public_Repos</th>" +
-				 		"</tr>";*/
+				 		"<th style= width:25%;>Follwers</th>" +
+				 		"<th style= width:25%;>Following</th>" +
+				 		"<th style= width:25%;>public_Repos</th>" +
+				 		"<th style= width:25%;>public_gists</th>" +
+				 		
+				 		"</tr>";
 			
 			for (i = 0; i <30; i++) { 
 				
 				$.ajax({
-					url: "https://api.github.com/users/" + uers[i],
-					dataType: 'json',
-					success: function(data) {
-						console.log(uers[i]+" followers:"+data.followers);
-						console.log(uers[i]+" public repos:"+data.public_repos);
-						/*info+= "<tr>" +
-							   "<td>" + data.followers +  "</td>" +
-							   "<td>" + data.public_repos +  "</td>" +
-								"</tr>" ;*/
+					url: "https://api.github.com/users/" + uers[i]
+				}).then(function(data) {
 					
-					},
-					
-					error: function(req, status, err) {
-						console.log("Error in API: " + err);
-					}
+						console.log(data.login.toUpperCase()+"- followers:"+data.followers);
+						console.log(data.login.toUpperCase()+"- public repos:"+data.public_repos);
+						console.log("  ");
+						var temp="<table border=2  style= width:550px; alignment-adjust: central;>" +
+				 		"<tr>" +
+				 		"<td style= width:25% height=100px;>"+ data.followers+ "</td>" +
+				 		"<td style= width:25% height=100px;>"+ data.following+ "</td>" +
+				 		"<td style= width:25% height=100px;>"+ data.public_repos+ "</td>" +
+				 		"<td style= width:25% height=100px;>"+ data.public_gists+ "</td>" +
+				 		"</tr>"; 
+						       
+						$("#side").append(temp);
+	
+					})
 						
-				})
 			}
-			/*info+="</table>";
-			$("#side").append(info);*/
+			info+="</table>";
+			$("#side").append(info);
 			
 		  
 		})
